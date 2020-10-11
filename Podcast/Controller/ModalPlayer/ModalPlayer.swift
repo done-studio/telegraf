@@ -228,7 +228,6 @@ extension ModalPlayer {
         
         fileUrl.appendPathComponent(episode.lastLocalPathCompoenent ?? "")
         chapters(url: fileUrl)
-        Chapters(path: fileUrl)
         
         let playerItem = AVPlayerItem(url: fileUrl)
         

@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct EpisodeDataSource {
+struct EpisodeDataSource: Identifiable {
+    var id = UUID()
+    
     var name: String?
     var artist: String?
     var description: String?

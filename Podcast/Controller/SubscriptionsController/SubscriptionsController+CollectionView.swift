@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension SubscriptionsController {
     
@@ -57,8 +58,10 @@ extension SubscriptionsController {
             podcastController.index = 1
         }
         
+        //let podcastView = PlayerView(podcast: podcast)
+//        let podcastViewHostingController = UIHostingController(rootView: podcastView)
         
-        navigationController?.pushViewController(podcastController, animated: true)
+  //      navigationController?.pushViewController(podcastViewHostingController, animated: true)
     }
     
     

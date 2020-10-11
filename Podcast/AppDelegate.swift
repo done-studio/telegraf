@@ -9,6 +9,8 @@
 import UIKit
 import UserNotifications
 import CloudKit
+import CoreData
+import SwiftUI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,17 +19,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        window = UIWindow()
-        window?.makeKeyAndVisible()
+        //UITableView.appearance().separatorStyle = .none
+        //UITableView.appearance().backgroundColor = .none
+        //UITableView.appearance().backgroundColor = UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 0.2)
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         
-        let masterController = MasterController()
-        window?.rootViewController = masterController
+        let contentView = HomeView().environment(\.managedObjectContext, context)
+        
+        window = UIWindow()
+        window?.rootViewController = UIHostingController(rootView: contentView)
+        window?.makeKeyAndVisible()
+        return true
+        
+        
+        //let masterController = MasterController()
+        //window?.rootViewController = masterController
+        let flowLayoyt = UICollectionViewFlowLayout()
+        let master = UINavigationController(rootViewController: SubscriptionsController(collectionViewLayout: flowLayoyt))
+        window?.rootViewController = master
 
         setupAppearance()
 
         setupJWT()
         getNotificationSettings()
-        print("Launched YYY")
+        
 
         return true
     }
@@ -60,6 +75,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let err = err {
                 print("Failed to save to iCloud: ", err)
                 return
+            }
+        }
+    }
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "PodcastModels")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error {
+                fatalError("loading of store failed: \(error)")
+            }
+        })
+        return container
+    }()
+    
+    func saveContext () {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
